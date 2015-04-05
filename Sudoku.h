@@ -23,4 +23,5 @@ private:
 	bool wrongMap;
 	
 	bool ok(int row, int col, int test);
+	void setncan(int row, int col, bool ncan[]);
 };

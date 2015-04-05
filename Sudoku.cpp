@@ -88,10 +88,14 @@ bool Sudoku::Solve_print()
 		return true;
 	}
 	
+	/* set candidate */
+	bool ncan[10]={0};
+	setncan(row, col, ncan);
+
 	/* backtracking */
 	for(int test=1; test<=9; test++)
 	{
-		if(ok(row, col, test))
+		if(ncan[test] == false)
 		{
 			map[row][col] = test;
 			Solve_print();
@@ -106,16 +110,36 @@ bool Sudoku::Solve_print()
 		return true;	
 }
 
+void Sudoku::setncan(int row, int col, bool ncan[])
+{
+	/* test number is used in col or row */
+	for(int i=0; i<size; i++)
+	{
+		ncan[map[i][col]] = true;
+		ncan[map[row][i]] = true;
+	}
+	/* test number is used in the block */
+	int blocki = row-row%width;
+	int blockj = col-col%width;
+	for(int i=0; i<width; i++)
+		for(int j=0; j<width; j++)
+			ncan[map[blocki+i][blockj+j]] = true;
+}
+
 bool Sudoku::ok(int row, int col, int test)
 {
+	if(test==-1)
+		return true;
 	bool check=true;
 	/* test number is used in col or row */
 	for(int i=0; i<size; i++)
 	{
-		if(map[i][col] == test)
-			check = false;
-		else if(map[row][i] == test)
-			check = false;
+		if(i!=row)
+			if(map[i][col] == test)
+				check = false;
+		if(i!=col)
+			if(map[row][i] == test)
+				check = false;
 	}
 	/* test number is used in the block */
 	int blocki = row-row%width;
@@ -123,7 +147,8 @@ bool Sudoku::ok(int row, int col, int test)
 	for(int i=0; i<width; i++)
 		for(int j=0; j<width; j++)
 			if(map[blocki+i][blockj+j] == test)
-				check = false;
+				if(blocki+i!=row && blockj+j!=col)
+					check = false;
 	return check;
 }
 
