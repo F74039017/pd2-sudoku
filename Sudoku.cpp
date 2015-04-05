@@ -128,7 +128,7 @@ void Sudoku::setncan(int row, int col, bool ncan[])
 
 bool Sudoku::ok(int row, int col, int test)
 {
-	if(test==-1)
+	if(test==-1 || test==0)
 		return true;
 	bool check=true;
 	/* test number is used in col or row */
