@@ -4,11 +4,14 @@ Sudoku::Sudoku()
 {
 	memset(map, 0, sizeof(map));
 	ans = 0;
+	wrongMap = false;
 }
 
 Sudoku::Sudoku(int map[][size])
 {
 	setMap(map);
+	ans = 0;
+	wrongMap = false;
 }
 
 void Sudoku::ReadIn()
@@ -42,6 +45,17 @@ void Sudoku::printMap()
 /* handle the output and function question require */
 void Sudoku::Solve()
 {
+	/* wrong map check */
+	for(int i=0; i<size; i++)
+		for(int j=0; j<size; j++)
+			if(!ok(i, j, map[i][j]))
+				wrongMap = true;
+	if(wrongMap)
+	{
+		cout << "0" << endl;
+		return;
+	}
+	/* normal check */
 	if(!Solve_print())
 		cout << "0" << endl;
 }
@@ -80,15 +94,16 @@ bool Sudoku::Solve_print()
 		if(ok(row, col, test))
 		{
 			map[row][col] = test;
-			if(Solve())
-				return true;
+			Solve_print();
 			/* if failed then remark */
 			map[row][col] = 0;
 		}
 	}
 	//--cout << "try all test number" << endl;
-	return false;
-		
+	if(!ans)
+		return false;
+	else
+		return true;	
 }
 
 bool Sudoku::ok(int row, int col, int test)

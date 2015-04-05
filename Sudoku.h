@@ -20,6 +20,7 @@ public:
 private:
 	int map[size][size];
 	int ans;
+	bool wrongMap;
 	
 	bool ok(int row, int col, int test);
 };
