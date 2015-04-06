@@ -1,10 +1,28 @@
 #include "Sudoku.h"
-
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
 Sudoku::Sudoku()
 {
+	srand(time(NULL));
 	memset(map, 0, sizeof(map));
 	ans = 0;
 	wrongMap = false;
+	swaptimes = 500;
+	int template_qmap[12][12]={	
+	{4, 2, 6, 8, 7, 3, 9, 5, 1, -1, -1, -1},
+	{0, 0, 3, 9, 5, 0, 6, 0, 4, -1, -1, -1},
+	{9, 0, 1, 6, 2, 4, 8, 0, 0, -1, -1, -1},
+	{-1, -1, -1, 1, 3, 2, 0, 8, 7, 9, 5, 6},
+	{-1, -1, -1, 0, 8, 0, 1, 9, 0, 4, 2, 0},
+	{-1, -1, -1, 4, 9, 6, 2, 3, 0, 8, 7, 1},
+	{1, 0, 0, 0, 4, 0, -1, -1, -1, 6, 9, 5},
+	{0, 0, 4, 0, 6, 0, -1, -1, -1, 1, 3, 7},
+	{6, 9, 5, 0, 1, 7, -1, -1, -1, 2, 8, 4},
+	{3, 1, 2, -1, -1, -1, 7, 4, 0, 5, 0, 9},
+	{7, 4, 8, -1, -1, -1, 0, 6, 9, 3, 0, 2},
+	{0, 6, 0, -1, -1, -1, 3, 1, 0, 7, 0, 8}};
+	memcpy(qmap, template_qmap, sizeof(qmap));
 }
 
 Sudoku::Sudoku(int map[][size])
@@ -28,13 +46,21 @@ void Sudoku::setMap(int map[][size])
 			this->map[i][j] = map[i][j];
 }
 
-void Sudoku::printMap()
+void Sudoku::printMap(char qs)
 {
+	int print[size][size];
+	if(qs=='q')
+		memcpy(print, qmap, sizeof(print));
+	else if(qs=='s')
+		memcpy(print, map, sizeof(print));
+	else
+		cerr << "print map error" << endl;
+
 	for(int i=0; i<size; i++)
 	{
 		for(int j=0; j<size; j++)
 		{
-			cout << map[i][j];
+			cout << print[i][j];
 			if(j!=size-1)
 				cout << " ";
 		}
@@ -84,7 +110,7 @@ bool Sudoku::Solve_print()
 	{
 		ans++;
 		cout << ans << endl;
-		printMap();
+		printMap('s');
 		return true;
 	}
 	
@@ -155,4 +181,64 @@ bool Sudoku::ok(int row, int col, int test)
 int Sudoku::getans()
 {
 	return ans;
+}
+
+void Sudoku::swapline(int &r, int &t)
+{
+	r = rand()%12;
+	t = rand()%2;
+	if(t)
+		t = 1;
+	else
+		t = 2;
+	if(0<=r && r<3)
+		t = (r+t)%3;	
+	else if(3<=r && r<6)
+		t = (r+t)%3+3;
+	else if(6<=r && r<9)
+		t = (r+t)%3+6;
+	else if(9<=r && r<12)
+		t = (r+t)%3+9;
+	//cout << r << " and " << t << endl;
+}
+
+
+void Sudoku::swaprow()
+{
+	int a, b;
+	swapline(a, b);
+	int temp[size];
+	memcpy(temp, qmap[a], sizeof(temp));
+	memcpy(qmap[a], qmap[b], sizeof(temp));
+	memcpy(qmap[b], temp, sizeof(temp));
+}
+
+void Sudoku::swapcol()
+{
+	int a, b;
+	swapline(a, b);
+	int temp[size];
+	for(int j=0; j<size; j++)
+	{
+		temp[j] = qmap[j][a];
+		qmap[j][a] = qmap[j][b];
+		qmap[j][b] = temp[j];
+	}
+}
+
+void Sudoku::setSwapTimes(int times)
+{
+	swaptimes = times;
+}
+
+void Sudoku::startSwap()
+{
+	for(int i=0; i<swaptimes; i++)
+		swaprow(), swapcol();
+}
+
+void Sudoku::GiveQuestion()
+{
+	startSwap();
+	printMap('q');
 }
