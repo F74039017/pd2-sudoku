@@ -25,13 +25,11 @@ Sudoku::Sudoku()
 	memcpy(qmap, template_qmap, sizeof(qmap));
 }
 
-Sudoku::Sudoku(int map[][size])
-{
-	setMap(map);
-	ans = 0;
-	wrongMap = false;
-}
+/*********************************
+		Solve	Sudoku
+*********************************/
 
+/* Read map from STDIN */
 void Sudoku::ReadIn()
 {
 	for(int i=0; i<size; i++)
@@ -46,6 +44,7 @@ void Sudoku::setMap(int map[][size])
 			this->map[i][j] = map[i][j];
 }
 
+/* Print qmap or ansmap by giving 'q' or 's' */
 void Sudoku::printMap(char qs)
 {
 	int print[size][size];
@@ -71,7 +70,8 @@ void Sudoku::printMap(char qs)
 	}	
 }
 
-/* handle the output and function question require */
+/* Handle the output and function question require */
+/* no -> 0, unique -> 1 and map, multi -> 2 */
 void Sudoku::Solve()
 {
 	/* wrong map check */
@@ -85,7 +85,7 @@ void Sudoku::Solve()
 		return;
 	}
 	/* normal check */
-	int type = Solve_print();
+	int type = backTrack();
 	if(type==0)
 		cout << "0" << endl;
 	else if(type==1)
@@ -94,8 +94,8 @@ void Sudoku::Solve()
 		cout << "2" << endl;
 }
 
-/* the function set ans and print the matrxi with if solvable */
-int Sudoku::Solve_print()
+/* return the ans type and set ansmap if exist */
+int Sudoku::backTrack()
 {
 	int row, col;
 	/* locate hole and check finish */
@@ -132,10 +132,10 @@ int Sudoku::Solve_print()
 		{
 			//cout << "test " << test << endl;
 			map[row][col] = test;
-			Solve_print();
+			backTrack();
 			if(ans>1)
 				return 2;
-			/* if failed then remark */
+			/* remark for next */
 			map[row][col] = 0;
 		}
 	}
@@ -146,6 +146,7 @@ int Sudoku::Solve_print()
 		return 1;
 }
 
+/* Choose candididate by ncan array */
 void Sudoku::setncan(int row, int col, bool ncan[])
 {
 	/* test number is used in col or row */
@@ -162,12 +163,13 @@ void Sudoku::setncan(int row, int col, bool ncan[])
 			ncan[map[blocki+i][blockj+j]] = true;
 }
 
+/* check whether test number is used */
 bool Sudoku::ok(int row, int col, int test)
 {
 	if(test==-1 || test==0)
 		return true;
 	bool check=true;
-	/* test number is used in col or row */
+	// test number is used in col or row 
 	for(int i=0; i<size; i++)
 	{
 		if(i!=row)
@@ -177,7 +179,7 @@ bool Sudoku::ok(int row, int col, int test)
 			if(map[row][i] == test)
 				check = false;
 	}
-	/* test number is used in the block */
+	// test number is used in the block 
 	int blocki = row-row%width;
 	int blockj = col-col%width;
 	for(int i=0; i<width; i++)
@@ -188,11 +190,9 @@ bool Sudoku::ok(int row, int col, int test)
 	return check;
 }
 
-int Sudoku::getans()
-{
-	return ans;
-}
-
+/*********************************
+		Give	Question
+**********************************/
 void Sudoku::chooseLine(int &r, int &t)
 {
 	r = rand()%12;
@@ -236,16 +236,6 @@ void Sudoku::swapColLine()
 	}
 }
 
-void Sudoku::setSwapTimes(int times)
-{
-	swaptimes = times;
-}
-
-void Sudoku::startSwap()
-{
-	for(int i=0; i<swaptimes; i++)
-		swapRowLine(), swapColLine(), swapRowGroup(), swapColGroup();
-}
 
 void Sudoku::chooseGroup(int &r, int &t)
 {
@@ -281,6 +271,18 @@ void Sudoku::swapColGroup()
 			map[i][a+j] = map[i][b+j];
 			map[i][b+j] = temp[i][j];
 		}
+}
+
+void Sudoku::setSwapTimes(int times)
+{
+	swaptimes = times;
+}
+
+/* Swap the map by swap group and line for 'swaptimes' */
+void Sudoku::startSwap()
+{
+	for(int i=0; i<swaptimes; i++)
+		swapRowLine(), swapColLine(), swapRowGroup(), swapColGroup();
 }
 
 void Sudoku::GiveQuestion()
