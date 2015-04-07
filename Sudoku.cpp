@@ -52,7 +52,10 @@ void Sudoku::printMap(char qs)
 	if(qs=='q')
 		memcpy(print, qmap, sizeof(print));
 	else if(qs=='s')
-		memcpy(print, map, sizeof(print));
+	{	
+		cout << ans << endl;
+		memcpy(print, ansmap, sizeof(print)); // change to the ansmap
+	}
 	else
 		cerr << "print map error" << endl;
 
@@ -82,12 +85,17 @@ void Sudoku::Solve()
 		return;
 	}
 	/* normal check */
-	if(!Solve_print())
+	int type = Solve_print();
+	if(type==0)
 		cout << "0" << endl;
+	else if(type==1)
+		printMap('s');
+	else
+		cout << "2" << endl;
 }
 
 /* the function set ans and print the matrxi with if solvable */
-bool Sudoku::Solve_print()
+int Sudoku::Solve_print()
 {
 	int row, col;
 	/* locate hole and check finish */
@@ -105,13 +113,12 @@ bool Sudoku::Solve_print()
 		if(finished==false)
 			break;
 	}
-	//--cout << "locate hole in " << row << ", " << col << endl;
+	//cout << "locate hole in " << row << ", " << col << endl;
 	if(finished)
 	{
 		ans++;
-		cout << ans << endl;
-		printMap('s');
-		return true;
+		memcpy(ansmap, map, sizeof(ansmap));
+		return 1;
 	}
 	
 	/* set candidate */
@@ -123,17 +130,20 @@ bool Sudoku::Solve_print()
 	{
 		if(ncan[test] == false)
 		{
+			//cout << "test " << test << endl;
 			map[row][col] = test;
 			Solve_print();
+			if(ans>1)
+				return 2;
 			/* if failed then remark */
 			map[row][col] = 0;
 		}
 	}
-	//--cout << "try all test number" << endl;
+	//cout << "try all test number" << endl;
 	if(!ans)
-		return false;
-	else
-		return true;	
+		return 0;
+	else if(ans==1)
+		return 1;
 }
 
 void Sudoku::setncan(int row, int col, bool ncan[])

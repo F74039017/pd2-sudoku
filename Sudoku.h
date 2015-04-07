@@ -20,12 +20,13 @@ private:
 	int ans;
 	bool wrongMap;
 	int qmap[size][size];
+	int ansmap[size][size];
 	int swaptimes;
 
 	void printMap(char qs);
 
 	/* Solve */
-	bool Solve_print(); 
+	int Solve_print(); 
 	bool ok(int row, int col, int test);
 	void setncan(int row, int col, bool ncan[]);
 
