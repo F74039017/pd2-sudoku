@@ -183,7 +183,7 @@ int Sudoku::getans()
 	return ans;
 }
 
-void Sudoku::swapline(int &r, int &t)
+void Sudoku::chooseLine(int &r, int &t)
 {
 	r = rand()%12;
 	t = rand()%2;
@@ -203,20 +203,20 @@ void Sudoku::swapline(int &r, int &t)
 }
 
 
-void Sudoku::swaprow()
+void Sudoku::swapRowLine()
 {
 	int a, b;
-	swapline(a, b);
+	chooseLine(a, b);
 	int temp[size];
 	memcpy(temp, qmap[a], sizeof(temp));
 	memcpy(qmap[a], qmap[b], sizeof(temp));
 	memcpy(qmap[b], temp, sizeof(temp));
 }
 
-void Sudoku::swapcol()
+void Sudoku::swapColLine()
 {
 	int a, b;
-	swapline(a, b);
+	chooseLine(a, b);
 	int temp[size];
 	for(int j=0; j<size; j++)
 	{
@@ -234,7 +234,43 @@ void Sudoku::setSwapTimes(int times)
 void Sudoku::startSwap()
 {
 	for(int i=0; i<swaptimes; i++)
-		swaprow(), swapcol();
+		swapRowLine(), swapColLine(), swapRowGroup(), swapColGroup();
+}
+
+void Sudoku::chooseGroup(int &r, int &t)
+{
+	r = rand()%4;
+	t = rand()%3+1;
+	t = (r+t)%4;
+	r *= 3, t *= 3;
+}
+
+void Sudoku::swapRowGroup()
+{
+	int size = 12;
+	int width = 3;
+	int a, b;
+	chooseGroup(a, b);
+	int temp[width][size];
+	memcpy(temp, map[a], sizeof(temp));
+	memcpy(map[a], map[b], sizeof(temp));
+	memcpy(map[b], temp, sizeof(temp));
+}
+
+void Sudoku::swapColGroup()
+{
+	int size = 12;
+	int width = 3;
+	int a, b;
+	chooseGroup(a, b);
+	int temp[size][width];
+	for(int i=0; i<size; i++)
+		for(int j=0; j<width; j++)
+		{
+			temp[i][j] = map[i][a+j];
+			map[i][a+j] = map[i][b+j];
+			map[i][b+j] = temp[i][j];
+		}
 }
 
 void Sudoku::GiveQuestion()

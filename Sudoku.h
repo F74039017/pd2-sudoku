@@ -30,9 +30,12 @@ private:
 	void setncan(int row, int col, bool ncan[]);
 
 	/* Give */
-	void swapline(int &r, int &t);
-	void swaprow();
-	void swapcol();
+	void chooseLine(int &r, int &t);
+	void swapRowLine();
+	void swapColLine();
+	void chooseGroup(int &r, int &t);
+	void swapRowGroup();
+	void swapColGroup();
 	void startSwap();
 
 };
