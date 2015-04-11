@@ -83,6 +83,13 @@ void Sudoku::setMap(int map[][size])
 /* no -> 0, unique -> 1 and map, multi -> 2 */
 void Sudoku::Solve()
 {
+	/* Check -1 */
+	if(!checkDonCare())
+	{
+		cout << "0" << endl;
+		return;
+	}
+
 	/* wrong map check by base rule*/
 	for(int i=0; i<size; i++)
 		for(int j=0; j<size; j++)
@@ -282,6 +289,48 @@ bool Sudoku::UniqueSquare()
 		}
 	}
 	return false;
+}
+
+/* Return true when no error -1 input */
+bool Sudoku::checkDonCare()
+{
+	bool exist = false;
+	bool vis[size][size];
+	memset(vis, 0, sizeof(vis));
+	for(int i=0; i<size; i++)
+	{
+		if(i%width==0) // reset exist in row group
+			exist=false;
+		for(int j=0; j<size; j++)
+		{
+			if(map[i][j]==-1 && !vis[i][j]) // first time to meet -1
+			{
+				if(exist) // alreay exist one -1 block in the group
+					return false;
+				if(i%3==0 && j%3==0) // in left up corner
+				{
+					for(int k=0; k<width; k++)
+						for(int l=0; l<width; l++)
+						{
+							if(map[i+k][j+l]==-1) // elements in block are -1
+								vis[i+k][j+l] = true;
+							else
+								return false;
+						}
+					for(int k=0; k<size/width; k++) // not duplicated in col group
+					{
+						int row=k*3;
+						if(map[row][j]==-1 && row!=i)
+							return false;
+					}
+					exist = true;
+				}
+				else
+					return false;
+			}
+		}
+	}
+	return true;
 }
 
 /*********************************

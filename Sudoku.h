@@ -33,6 +33,7 @@ private:
 	bool UniqueSquare();
 	bool same2Check(int row[], int col[], vector<int> &record);
 	bool same2(int row, int col, vector<int> &record);
+	bool checkDonCare(); // check all -1
 
 
 	/***	 Give 		***/
