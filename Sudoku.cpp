@@ -101,19 +101,6 @@ void Sudoku::Solve()
 		return;
 	}
 
-	/* check multiple solution */
-	if(UniqueSquare())
-	{
-		cout << "2" << endl;
-		return;
-	}
-	transpose();
-	if(UniqueSquare())
-	{
-		cout << "2" << endl;
-		return;
-	}
-
 	/* normal check */
 	int type = backTrack();
 	if(type==0)
@@ -218,77 +205,6 @@ bool Sudoku::ok(int row, int col, int test)
 				if(blocki+i!=row && blockj+j!=col)
 					check = false;
 	return check;
-}
-
-bool Sudoku::same2(int row, int col, vector<int> &record)
-{
-	bool a[10];
-	for(int i=0; i<10; i++)
-		a[i] = false;
-	setncan(row, col, a);
-	int k=0;
-	vector<int> temp;
-	for(int i=1; i<10; i++)
-		if(i==record[k])
-			k++, temp.push_back(i);
-	record = temp;
-	if(record.size()>1)
-		return true;
-	else
-		return false;
-}
-
-bool Sudoku::same2Check(int row[], int col[], vector<int> &record)
-{
-	bool a[10], b[10];
-	for(int z=0; z<10; z++)
-	{		
-		a[z] = false;
-		b[z] = false;
-	}
-	setncan(row[0], col[0], a), setncan(row[1], col[1], b);
-	for(int i=1; i<10; i++)
-		if(a[i]==0 && b[i]==0) // is possible
-			record.push_back(i);
-	if(record.size()>1)
-		return true;
-	else
-		return false;
-}
-
-bool Sudoku::UniqueSquare()
-{
-	for(int k=0; k<size; k++) // all row
-	{
-		for(int i=0; i<size/width; i++) // group
-		{
-			int offset = i*width;
-			int cnt=0;
-			int col[2];
-			for(int j=0; j<width; j++) // element in group
-			{
-				int index = offset+j;
-				if(map[k][index]==0)
-					col[cnt++] = index;
-				if(cnt==2)
-				{
-					int row[2];
-					row[0] = row[1] = k;
-					vector<int> record;
-					if(same2Check(row, col, record)) // check up
-						for(int c=k+1; c<size; c++) // locate down
-							if(map[c][col[0]]==0 && map[c][col[1]]==0 && c/width!=k/width) // not in same block
-							{
-								vector<int> record1 = record;
-								if(same2(c, col[0], record1) && same2(c, col[1], record1))
-									return true;
-							}
-				}
-			}
-
-		}
-	}
-	return false;
 }
 
 /* Return true when no error -1 input */

@@ -30,9 +30,6 @@ private:
 	int backTrack(); // sovle by backtracking
 	void setncan(int row, int col, bool ncan[]); // set not can.
 	bool ok(int row, int col, int test); // check test number is ok
-	bool UniqueSquare();
-	bool same2Check(int row[], int col[], vector<int> &record);
-	bool same2(int row, int col, vector<int> &record);
 	bool checkDonCare(); // check all -1
 
 
