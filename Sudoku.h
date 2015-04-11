@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Sudoku
@@ -23,11 +24,16 @@ private:
 
 	/* Print qmap or ansmap by giving 'q' or 's' */
 	void printMap(char qs);
+	void transpose();
 
 	/***	 Solve		***/
 	int backTrack(); // sovle by backtracking
 	void setncan(int row, int col, bool ncan[]); // set not can.
 	bool ok(int row, int col, int test); // check test number is ok
+	bool UniqueSquare();
+	bool same2Check(int row[], int col[], vector<int> &record);
+	bool same2(int row, int col, vector<int> &record);
+
 
 	/***	 Give 		***/
 	void chooseLine(int &r, int &t);
