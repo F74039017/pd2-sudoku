@@ -169,8 +169,10 @@ void Sudoku::setncan(int row, int col, bool ncan[])
 	/* test number is used in col or row */
 	for(int i=0; i<size; i++)
 	{
-		ncan[map[i][col]] = true;
-		ncan[map[row][i]] = true;
+		if(map[i][col]!=-1)
+			ncan[map[i][col]] = true;
+		if(map[row][i]!=-1)
+			ncan[map[row][i]] = true;
 	}
 	/* test number is used in the block */
 	int blocki = row-row%width;
