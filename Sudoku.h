@@ -31,7 +31,7 @@ private:
 	void setncan(int row, int col, bool ncan[]); // set not can.
 	bool ok(int row, int col, int test); // check test number is ok
 	bool checkDonCare(); // check all -1
-
+	bool multiCheck(); // check multiple solutions
 
 	/***	 Give 		***/
 	void chooseLine(int &r, int &t);
