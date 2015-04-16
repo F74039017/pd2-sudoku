@@ -97,7 +97,7 @@ void Sudoku::setMap(int map[][size])
 void Sudoku::Solve()
 {
 	/*Check multiple solutions*/
-	if(!multiCheck())
+	if(multiCheck())
 	{
 		cout << "2" << endl;
 		return;
@@ -188,12 +188,12 @@ bool Sudoku::multiCheck()
 	int cnt=0;
 	for(int i=0; i<size; i++)
 		for(int j=0; j<size; j++)
-			if(map[i][j])
+			if(map[i][j]==0)
 				cnt++;
 	if(cnt>90)
-		return false;
-	else
 		return true;
+	else
+		return false;
 }
 
 /* Choose candididate by ncan array */

@@ -1,12 +1,18 @@
-all: main.o Sudoku.o
-	g++ -o project1 Sudoku.o main.o
+s: Solve.o Sudoku.o
+	g++ -o Solve Sudoku.o Solve.o
 
-main.o: main.cpp
-	g++ -c main.cpp
+q: GiveQuestion.o Sudoku.o
+	g++ -o GiveQuestion Sudoku.o GiveQuestion.o
+
+Solve.o: Solve.cpp
+	g++ -c Solve.cpp
+
+GiveQuestion.o: GiveQuestion.cpp
+	g++ -c GiveQuestion.cpp
 
 Sudoku.o: Sudoku.h Sudoku.cpp
 	g++ -c Sudoku.cpp
 
 
 clean:
-	rm project1 *.o
+	rm GiveQuestion Solve *.o
