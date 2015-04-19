@@ -376,7 +376,7 @@ void Sudoku::setSwapTimes(int times)
 void Sudoku::startSwap()
 {
 	for(int i=0; i<swaptimes; i++)
-		swapRowLine(), swapColLine(), swapRowGroup(), swapColGroup();
+		swapRowLine(), swapColLine(), swapRowGroup(), swapColGroup(), transpose();
 }
 
 void Sudoku::GiveQuestion()

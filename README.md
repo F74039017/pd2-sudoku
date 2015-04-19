@@ -30,6 +30,30 @@ Run `./Givequestion`<br />
 *GiveQuestion and Solve*<br />
 Run `./GiveQuestion | ./Solve`<br />
 
+Architecture 
+--------------------------
+**Solve**
+
+	ReadIn() get from from stdin and set map.
+	Solve()
+		* multiCheck() check whether the map is multiple solution.
+		* checkDonCare() check -1 is right.
+		* ok() check whether the map has the same element in row, col or block.
+		* backTrack() to solve the sudoku map.
+			1. 	locate rest 0 and check whether it is finish.
+			2. 	if it is finished, save the map to ansmap.
+				else set ncan[] (not-candidates)
+			3.	put a possible element to the hole and back to 1. (back-tracking)
+			4.	If ans>2 return multiple solutions.
+				else if try any possible and ans=0, return no solution.
+				else return unique solution.
+				
+**GiveQuestion**
+		
+	GiveQuestion()
+		* startSwap() template map by swapping groups, lines in group and transposing then print.
+	
+
 Demo 
 ---------------------------
 GiveQuestion: `./GiveQuestion > file.in` `cat file.in`
